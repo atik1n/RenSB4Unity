@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace RenSB
 {
+    //Структура спрайта, чисто для удобства
     public struct SpriteData
     {
         public Sprite Sprite;
@@ -22,12 +23,16 @@ namespace RenSB
         }
     }
 
+    //Здесь будут выставляться настройки для определенного проекта, например его расположение
     public class Preferences
     {
         public static string ProjectPath;
     }
+
+    //Основной класс
     public class Engine : MonoBehaviour
     {
+        //Основной GameObject для спрайтов
         public static GameObject SpritesObj = new GameObject("Sprites");
 
         public static void Init()
@@ -44,9 +49,11 @@ namespace RenSB
 
         public class Sprites
         {
+            //Создаем "динамические" массивы объектов и имейджов (Никита, запили структуру)
             static Image[] ImagesArr = new Image[0];
             static GameObject[] ObjArr = new GameObject[0];
 
+            //WIP
             public static void InitDialog(string DialogData, params SpriteData[] spritesData)
             {
                 for (int c = 0; c < spritesData.Length; c++)
@@ -73,12 +80,14 @@ namespace RenSB
                     }
                     catch (Exception ex)
                     {
+                        //Типичный ACHTUNG
                         Debug.Log("ACHTUNG! " + ex);
                     }
                 }
             }
         }
 
+        //Пока что просто балласт
         public static void BG(string Image, Image BG)
         {
 
