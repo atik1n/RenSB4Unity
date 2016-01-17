@@ -41,18 +41,19 @@ namespace RenSB
             Debug.Log(Screen.width + " " + Screen.height);
         }
 
-        public class Sprites
+        public class Dialog
         {
             //Создаем "динамические" массивы объектов и имейджов (Никита, запили структуру)
             /* UPD. Нахер это дерьмо
             static Image[] ImagesArr = new Image[0];
             static GameObject[] ObjArr = new GameObject[0];
              */
+
             static List<GameObject> ObjList = new List<GameObject>();
             static List<Image> ImagesList = new List<Image>();
 
             //WIP
-            public static void InitDialog(string DialogData, params SpriteData[] spritesData)
+            public static void Init(string DialogData, params SpriteData[] spritesData)
             {
             GameObject SpritesObj = new GameObject("Sprites");
             SpritesObj.transform.SetParent(Main.transform);
@@ -88,7 +89,7 @@ namespace RenSB
                 }
             }
 
-            public static void EndDialog()
+            public static void End()
             {
                 for (int x = 0; x < ObjList.Count; x++)
                 {
@@ -101,10 +102,17 @@ namespace RenSB
             }
         }
 
-        //Пока что просто балласт
-        public static void BG(string Image, Image BG)
+        public class Sprites
         {
+            public static void Add(params SpriteData[] Sprite)
+            {
 
+            }
+
+            public static void Remove(params string[] spriteName)
+            {
+
+            }
         }
     }
 }
