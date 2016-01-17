@@ -33,29 +33,33 @@ namespace RenSB
     public class Engine : MonoBehaviour
     {
         //Основной GameObject для спрайтов
-        public static GameObject SpritesObj = new GameObject("Sprites");
-
+        public static GameObject Main = new GameObject("RenSB");
         public static void Init()
         {
-            GameObject Main = new GameObject("RenSB");
             Canvas Canvas = Main.AddComponent<Canvas>();
             Canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            SpritesObj.transform.SetParent(Canvas.transform);
-            SpritesObj.AddComponent<RectTransform>();
-            SpritesObj.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-            SpritesObj.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
             Debug.Log(Screen.width + " " + Screen.height);
         }
 
         public class Sprites
         {
             //Создаем "динамические" массивы объектов и имейджов (Никита, запили структуру)
+            /* UPD. Нахер это дерьмо
             static Image[] ImagesArr = new Image[0];
             static GameObject[] ObjArr = new GameObject[0];
+             */
+            static List<GameObject> ObjList = new List<GameObject>();
+            static List<Image> ImagesList = new List<Image>();
 
             //WIP
             public static void InitDialog(string DialogData, params SpriteData[] spritesData)
             {
+            GameObject SpritesObj = new GameObject("Sprites");
+            SpritesObj.transform.SetParent(Main.transform);
+            SpritesObj.AddComponent<RectTransform>();
+            SpritesObj.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            SpritesObj.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+
                 for (int c = 0; c < spritesData.Length; c++)
                 {
                     try
@@ -63,20 +67,18 @@ namespace RenSB
                         Debug.Log(spritesData[c].Sprite + " " + spritesData[c].Coord + " " + spritesData[c].Name);
                         int W = spritesData[c].Sprite.texture.width;
                         int H = spritesData[c].Sprite.texture.height;
-                        int Index = ImagesArr.Length;
-                        Array.Resize(ref ImagesArr, ImagesArr.Length + 1); Array.Resize(ref ObjArr, ObjArr.Length + 1);
+                        int Index = ObjList.Count;
+                        ObjList.Add(new GameObject());
+                        ObjList[Index].transform.SetParent(SpritesObj.transform);
 
-                        ObjArr[Index] = new GameObject();
-                        ObjArr[Index].transform.SetParent(SpritesObj.transform);
+                        ObjList[Index].AddComponent<RectTransform>();
+                        ObjList[Index].GetComponent<RectTransform>().localPosition = new Vector3(spritesData[c].Coord.x, spritesData[c].Coord.y, 0);
+                        ObjList[Index].GetComponent<RectTransform>().sizeDelta = new Vector2(W, H);
+                        ObjList[Index].name = spritesData[c].Name;
 
-                        ObjArr[Index].AddComponent<RectTransform>();
-                        ObjArr[Index].GetComponent<RectTransform>().localPosition = new Vector3(spritesData[c].Coord.x, spritesData[c].Coord.y, 0);
-                        ObjArr[Index].GetComponent<RectTransform>().sizeDelta = new Vector2(W, H);
-                        ObjArr[Index].name = spritesData[c].Name;
-
-                        ImagesArr[Index] = ObjArr[Index].AddComponent<Image>();
-                        ImagesArr[Index].name = spritesData[c].Name + "Sprite";
-                        ImagesArr[Index].sprite = spritesData[c].Sprite;
+                        ImagesList.Add(ObjList[Index].AddComponent<Image>());
+                        ImagesList[Index].name = spritesData[c].Name + "Sprite";
+                        ImagesList[Index].sprite = spritesData[c].Sprite;
                     }
                     catch (Exception ex)
                     {
@@ -84,6 +86,18 @@ namespace RenSB
                         Debug.Log("ACHTUNG! " + ex);
                     }
                 }
+            }
+
+            public static void EndDialog()
+            {
+                for (int x = 0; x < ObjList.Count; x++)
+                {
+                    GameObject.Destroy(ObjList[x]);
+                    Image.Destroy(ImagesList[x]);
+                }
+
+                ObjList.Clear();
+                ImagesList.Clear();
             }
         }
 
